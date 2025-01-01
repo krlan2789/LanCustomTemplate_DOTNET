@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "LAN Technology",
+    "classifications": [
+        "Web",
+        "API",
+        "Web API",
+        "ASP.NET Core",
+        "C#"
+    ],
+    "identity": "CustomTemplate.API",
+    "name": ".LAN - ASP.NET Core Web API",
+    "shortName": "lanwebapi",
+    "sourceName": "CustomTemplate",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "preferNameDirectory": true
+}
