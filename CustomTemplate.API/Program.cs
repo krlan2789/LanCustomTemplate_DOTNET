@@ -2,6 +2,7 @@
 using System.Text;
 using CustomTemplate.API.Data;
 using CustomTemplate.API.Middlewares;
+using CustomTemplate.API.Seeders;
 using CustomTemplate.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -76,14 +77,21 @@ public class Program
             });
 
             await app.MigrateDbAsync();
+
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            await DatabaseSeeder.Seed(services);
         }
 
         // Configure the HTTP request pipeline.
+        app.UseHsts();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseCookiePolicy();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseSession();
         app.UseMiddleware<UserSessionLoggingMiddleware>();
         app.MapControllers();
 

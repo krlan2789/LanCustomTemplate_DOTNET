@@ -33,7 +33,7 @@ ASP.NET Project - Custom Template when creating new ASP.NET Core project
 
     Template Name                        Short Name                Language   Tags
     -----------------------------------  ------------------------  ---------  ---------------------------------------------------------
-    .LAN - ASP.NET Core Web API <-New    lanwebapi                 [C#]       Web/API/Web API/ASP.NET Core/C#
+    .LAN - ASP.NET Core Web API <--New   lanwebapi                 [C#]       Web/API/Web API/ASP.NET Core/C#
     .NET Aspire App Host                 aspire-apphost            [C#]       Common/.NET Aspire/Cloud
     .NET Aspire Empty App                aspire                    [C#]       Common/.NET Aspire/Cloud/Web/Web API/API/Service
     .NET Aspire Service Defaults         aspire-servicedefaults    [C#]       Common/.NET Aspire/Cloud/Web/Web API/API/Service

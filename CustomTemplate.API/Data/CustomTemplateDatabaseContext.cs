@@ -7,6 +7,7 @@ namespace CustomTemplate.API.Data;
 public class CustomTemplateDatabaseContext(DbContextOptions<CustomTemplateDatabaseContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
 
     public DbSet<UserSessionLog> UserSessionLogs => Set<UserSessionLog>();
 
@@ -32,7 +33,7 @@ public class CustomTemplateDatabaseContext(DbContextOptions<CustomTemplateDataba
         // UserSessionLog Table
         modelBuilder.Entity<UserSessionLog>(entity =>
         {
-            entity.HasOne(e => e.User).WithMany().HasForeignKey(r => r.UserId);
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(r => r.UserId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 
