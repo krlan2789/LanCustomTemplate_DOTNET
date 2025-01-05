@@ -75,7 +75,6 @@ Directory structure of `LanCustomTemplate/CustomTemplate.API/`:
 │
 ├───Data
 │       CustomTemplateDatabaseContext.cs
-│       DataExtensions.cs
 │
 ├───Dtos
 │       LoginUserDto.cs

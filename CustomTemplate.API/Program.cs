@@ -76,8 +76,6 @@ public class Program
                     .WithTitle("CustomTemplate - REST API");
             });
 
-            await app.MigrateDbAsync();
-
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
             await DatabaseSeeder.Seed(services);

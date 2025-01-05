@@ -12,7 +12,7 @@ public static class SlugHelper
         string str = RemoveAccents(phrase).ToLower();
         str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // Remove invalid characters
         str = Regex.Replace(str, @"\s+", " ").Trim(); // Convert multiple spaces into one space
-        str = str.Substring(0, str.Length <= maxLength ? str.Length : maxLength).Trim(); // Cut to maxLength chars
+        str = str[..(str.Length <= maxLength ? str.Length : maxLength)].Trim(); // Cut to maxLength chars
         str = Regex.Replace(str, @"\s", "-"); // Hyphens
         return $"{str}-{RandomString(4)}";
     }
