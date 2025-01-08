@@ -17,6 +17,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Add configuration to the container
+        builder.Configuration
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
+
         // Add Database Context services to the container
         builder.Services
             .AddDbContext<CustomTemplateDatabaseContext>(option =>
@@ -24,16 +30,7 @@ public class Program
                 option.UseSqlServer("" + builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-        // Add configuration to the container
-        builder.Configuration
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables();
-
-        // Add services to the container.
-        string tokenIssuer = "" + builder.Configuration["Jwt:Issuer"];
-        string tokenAudience = "" + builder.Configuration["Jwt:Audience"];
-        string secretKey = "" + builder.Configuration["Jwt:SecretKey"];
+        // Add services to the container
         builder.Services
             .AddAuthentication(options =>
             {
@@ -48,12 +45,12 @@ public class Program
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = tokenIssuer,
-                    ValidAudience = tokenAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                    ValidIssuer = "" + builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = "" + builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("" + builder.Configuration["Jwt:SecretKey"]))
                 };
             });
-        builder.Services.AddSingleton(new TokenService(secretKey, tokenIssuer, tokenAudience));
+        builder.Services.AddSingleton<TokenService>();
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
@@ -73,7 +70,7 @@ public class Program
                     .WithTheme(ScalarTheme.BluePlanet)
                     .WithEndpointPrefix(scalarApiRoute)
                     .WithOpenApiRoutePattern(openApiRoute)
-                    .WithTitle("CustomTemplate - REST API");
+                    .WithTitle((builder.Configuration["AppName"] ?? "CustomTemplate") + " - REST API");
             });
 
             using var scope = app.Services.CreateScope();
@@ -89,7 +86,7 @@ public class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseSession();
+        app.UseMiddleware<AuthMiddleware>();
         app.UseMiddleware<UserSessionLoggingMiddleware>();
         app.MapControllers();
 

@@ -1,6 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CustomTemplate.API.Data;
+using CustomTemplate.API.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CustomTemplate.API.Services;
@@ -10,12 +13,17 @@ public class TokenService
     private readonly string _secretKey;
     private readonly string _issuer;
     private readonly string _audience;
+    private readonly ILogger<TokenService> _logger;
+    private readonly IServiceProvider _serviceProvider;
+    private CustomTemplateDatabaseContext DbContext => _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<CustomTemplateDatabaseContext>();
 
-    public TokenService(string secretKey, string issuer, string audience)
+    public TokenService(IConfiguration configuration, ILogger<TokenService> logger, IServiceProvider serviceProvider)
     {
-        _secretKey = secretKey;
-        _issuer = issuer;
-        _audience = audience;
+        _secretKey = "" + configuration["Jwt:SecretKey"];
+        _issuer = "" + configuration["Jwt:Issuer"];
+        _audience = "" + configuration["Jwt:Audience"];
+        _logger = logger;
+        _serviceProvider = serviceProvider;
     }
 
     public string GenerateToken(string username, TimeSpan expiration)
@@ -55,10 +63,26 @@ public class TokenService
         return tokenHandler.ValidateToken(token, validationParameters, out _);
     }
 
-    public string GetUserIdFromToken(HttpContext httpContext)
+    public string? GetUsername(HttpContext httpContext)
     {
-        string token = "" + httpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-        var claim = GetPrincipalFromToken(token).Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-        return claim == null ? "" : claim;
+        try
+        {
+            string token = "" + httpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            _logger.LogInformation("TokenService: Token={Token}", token);
+            var username = GetPrincipalFromToken(token).Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            _logger.LogInformation("TokenService: Username={Username}", username);
+            return username ?? null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public async Task<User?> GetUser(HttpContext httpContext)
+    {
+        var username = GetUsername(httpContext);
+        User? currentUser = await DbContext.Users.Where(user => user.Username == username).FirstOrDefaultAsync();
+        return currentUser;
     }
 }

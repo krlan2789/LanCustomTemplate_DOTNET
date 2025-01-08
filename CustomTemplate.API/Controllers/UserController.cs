@@ -30,7 +30,7 @@ namespace CustomTemplate.API.Controllers
         {
             try
             {
-                string username = _tokenService.GetUserIdFromToken(HttpContext);
+                string username = _tokenService.GetUsername(HttpContext);
                 User? currentUser = await dbContext.Users.Where(user => user.Username == username).FirstAsync();
                 if (currentUser != null)
                 {
