@@ -117,4 +117,5 @@ Directory structure of `LanCustomTemplate/CustomTemplate.API/`:
 - Tokenization Service
 - Hashing Helper
 - Slug Helper
-- Data Seeder in evelopment Environment
+- Data Seeder in Development Environment
+- Setup OpenAPI Documentation with Scalar

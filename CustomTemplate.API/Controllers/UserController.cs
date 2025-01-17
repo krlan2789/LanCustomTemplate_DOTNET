@@ -25,12 +25,17 @@ namespace CustomTemplate.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("profile", Name = nameof(GetProfileSelf))]
+        [HttpGet("profile")]
+        [EndpointSummary("Get User Profile (Authorized)")]
+        [EndpointDescription("Get authorized user profile.")]
+        [ProducesResponseType<ResponseData<ResponseUserDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status401Unauthorized)]
         public async Task<IResult> GetProfileSelf()
         {
             try
             {
-                string username = _tokenService.GetUsername(HttpContext);
+                var username = _tokenService.GetUsername(HttpContext);
                 User? currentUser = await dbContext.Users.Where(user => user.Username == username).FirstAsync();
                 if (currentUser != null)
                 {
@@ -47,7 +52,12 @@ namespace CustomTemplate.API.Controllers
             }
         }
 
-        [HttpGet("profile/{Username}", Name = nameof(GetProfile))]
+        [HttpGet("profile/{Username}")]
+        [EndpointSummary("Get User Profile")]
+        [EndpointDescription("Get user profile.")]
+        [ProducesResponseType<ResponseData<ResponseUserDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status404NotFound)]
         public async Task<IResult> GetProfile(string Username)
         {
             try

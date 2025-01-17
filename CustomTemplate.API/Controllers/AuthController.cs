@@ -25,7 +25,12 @@ namespace CustomTemplate.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login", Name = nameof(PostLogin))]
+        [HttpPost("login")]
+        [EndpointSummary("Login")]
+        [EndpointDescription("Login to get token for credential.")]
+        [ProducesResponseType<ResponseData<ResponseUserDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status404NotFound)]
         public async Task<IResult> PostLogin(LoginUserDto dto)
         {
             try
@@ -39,7 +44,7 @@ namespace CustomTemplate.API.Controllers
                 }
                 else
                 {
-                    return Results.Unauthorized();
+                    return Results.NotFound();
                 }
             }
             catch (Exception e)
@@ -49,7 +54,11 @@ namespace CustomTemplate.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register", Name = nameof(PostRegister))]
+        [HttpPost("register")]
+        [EndpointSummary("Register")]
+        [EndpointDescription("Create new account to use authorized endpoints.")]
+        [ProducesResponseType<ResponseData<ResponseUserDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
         public async Task<IResult> PostRegister([FromBody] RegisterUserDto userDto)
         {
             try
