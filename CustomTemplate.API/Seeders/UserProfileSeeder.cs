@@ -5,7 +5,7 @@ namespace CustomTemplate.API.Seeders;
 
 public class UserProfileSeeder
 {
-    public static async Task Seed(CustomTemplateDatabaseContext context)
+    public static async Task Seed(LanDatabaseContext context)
     {
         if (!context.UserProfiles.Any())
         {

@@ -7,7 +7,7 @@ public static class DatabaseSeeder
 {
     public static async Task Seed(IServiceProvider serviceProvider)
     {
-        using var context = new CustomTemplateDatabaseContext(serviceProvider.GetRequiredService<DbContextOptions<CustomTemplateDatabaseContext>>());
+        using var context = new LanDatabaseContext(serviceProvider.GetRequiredService<DbContextOptions<LanDatabaseContext>>());
         if (context.Database.GetPendingMigrations().Count() > 0)
         {
             context.Database.EnsureDeleted();

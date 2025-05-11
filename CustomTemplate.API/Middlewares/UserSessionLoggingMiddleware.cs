@@ -14,7 +14,7 @@ public class UserSessionLoggingMiddleware
         _next = next;
     }
 
-    public async Task Invoke(HttpContext context, CustomTemplateDatabaseContext dbContext)
+    public async Task Invoke(HttpContext context, LanDatabaseContext dbContext)
     {
         string ipAddress = "" + context.Connection.RemoteIpAddress?.ToString();
         string userAgent = "" + context.Request.Headers["User-Agent"].FirstOrDefault("Unknown");
