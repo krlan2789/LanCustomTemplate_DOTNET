@@ -14,10 +14,10 @@ namespace CustomTemplate.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly CustomTemplateDatabaseContext dbContext;
+        private readonly LanDatabaseContext dbContext;
         private readonly TokenService _tokenService;
 
-        public UserController(ILogger<UserController> logger, TokenService tokenService, CustomTemplateDatabaseContext context)
+        public UserController(ILogger<UserController> logger, TokenService tokenService, LanDatabaseContext context)
         {
             _logger = logger;
             dbContext = context;

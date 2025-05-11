@@ -25,7 +25,7 @@ public class Program
 
         // Add Database Context services to the container
         builder.Services
-            .AddDbContext<CustomTemplateDatabaseContext>(option =>
+            .AddDbContext<LanDatabaseContext>(option =>
             {
                 option.UseSqlServer("" + builder.Configuration.GetConnectionString("DefaultConnection"));
             });

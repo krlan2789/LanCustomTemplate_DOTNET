@@ -15,7 +15,7 @@ public class TokenService
     private readonly string _audience;
     private readonly ILogger<TokenService> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private CustomTemplateDatabaseContext DbContext => _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<CustomTemplateDatabaseContext>();
+    private LanDatabaseContext DbContext => _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<LanDatabaseContext>();
 
     public TokenService(IConfiguration configuration, ILogger<TokenService> logger, IServiceProvider serviceProvider)
     {

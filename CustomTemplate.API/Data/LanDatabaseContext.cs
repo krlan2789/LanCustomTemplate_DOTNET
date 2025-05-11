@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CustomTemplate.API.Data;
 
-public class CustomTemplateDatabaseContext(DbContextOptions<CustomTemplateDatabaseContext> options) : DbContext(options)
+public class LanDatabaseContext(DbContextOptions<LanDatabaseContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();

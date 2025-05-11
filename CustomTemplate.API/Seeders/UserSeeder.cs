@@ -6,7 +6,7 @@ namespace CustomTemplate.API.Seeders;
 
 public static class UserSeeder
 {
-    public static async Task Seed(CustomTemplateDatabaseContext context)
+    public static async Task Seed(LanDatabaseContext context)
     {
         if (!context.Users.Any())
         {
