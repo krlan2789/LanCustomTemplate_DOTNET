@@ -1,6 +1,8 @@
 
 using System.Text;
+using CustomTemplate.API.Configurations;
 using CustomTemplate.API.Data;
+using CustomTemplate.API.Interfaces;
 using CustomTemplate.API.Middlewares;
 using CustomTemplate.API.Seeders;
 using CustomTemplate.API.Services;
@@ -18,10 +20,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add configuration to the container
-        builder.Configuration
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables();
+        builder.Services.Configure<JwtTokenSettings>(builder.Configuration.GetSection("Jwt"));
 
         // Add Database Context services to the container
         builder.Services
@@ -39,18 +38,19 @@ public class Program
             })
             .AddJwtBearer(options =>
             {
+                var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtTokenSettings>();
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "" + builder.Configuration["Jwt:Issuer"],
-                    ValidAudience = "" + builder.Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("" + builder.Configuration["Jwt:SecretKey"]))
+                    ValidIssuer = "" + jwtSettings?.Issuer,
+                    ValidAudience = "" + jwtSettings?.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("" + jwtSettings?.SecretKey))
                 };
             });
-        builder.Services.AddSingleton<TokenService>();
+        builder.Services.AddScoped<ITokenService, JwtTokenService>();
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();

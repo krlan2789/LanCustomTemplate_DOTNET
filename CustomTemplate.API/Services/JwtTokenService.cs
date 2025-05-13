@@ -1,47 +1,45 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CustomTemplate.API.Configurations;
 using CustomTemplate.API.Data;
 using CustomTemplate.API.Entities;
+using CustomTemplate.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CustomTemplate.API.Services;
 
-public class TokenService
+public sealed class JwtTokenService : ITokenService
 {
-    private readonly string _secretKey;
-    private readonly string _issuer;
-    private readonly string _audience;
-    private readonly ILogger<TokenService> _logger;
-    private readonly IServiceProvider _serviceProvider;
-    private LanDatabaseContext DbContext => _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<LanDatabaseContext>();
+    private readonly JwtTokenSettings _options;
+    private readonly ILogger<JwtTokenService> _logger;
+    private readonly IDbContextFactory<LanDatabaseContext> _dbContextFactory;
 
-    public TokenService(IConfiguration configuration, ILogger<TokenService> logger, IServiceProvider serviceProvider)
+    public JwtTokenService(IOptions<JwtTokenSettings> options, ILogger<JwtTokenService> logger, IDbContextFactory<LanDatabaseContext> dbContextFactory)
     {
-        _secretKey = "" + configuration["Jwt:SecretKey"];
-        _issuer = "" + configuration["Jwt:Issuer"];
-        _audience = "" + configuration["Jwt:Audience"];
+        _options = options.Value;
         _logger = logger;
-        _serviceProvider = serviceProvider;
+        _dbContextFactory = dbContextFactory;
     }
 
     public string GenerateToken(string username, TimeSpan expiration)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
+            new Claim(ClaimTypes.NameIdentifier, username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _issuer,
-            audience: _audience,
+            issuer: _options.Issuer,
+            audience: _options.Audience,
             claims: claims,
-            expires: DateTime.Now.Add(expiration),
+            expires: DateTime.UtcNow.Add(expiration),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -53,11 +51,11 @@ public class TokenService
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secretKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
             ValidateIssuer = true,
-            ValidIssuer = _issuer,
+            ValidIssuer = _options.Issuer,
             ValidateAudience = true,
-            ValidAudience = _audience,
+            ValidAudience = _options.Audience,
             ValidateLifetime = true
         };
         return tokenHandler.ValidateToken(token, validationParameters, out _);
@@ -68,13 +66,14 @@ public class TokenService
         try
         {
             string token = "" + httpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-            _logger.LogInformation("TokenService: Token={Token}", token);
+            _logger.LogDebug("JwtTokenService: Token={Token}", token);
             var username = GetPrincipalFromToken(token).Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-            _logger.LogInformation("TokenService: Username={Username}", username);
+            _logger.LogDebug("JwtTokenService: Username={Username}", username);
             return username ?? null;
         }
-        catch (Exception)
+        catch (SecurityTokenException e)
         {
+            _logger.LogError($"JwtTokenService: Error getting username from token: {e.Message}");
             return null;
         }
     }
@@ -82,7 +81,8 @@ public class TokenService
     public async Task<User?> GetUser(HttpContext httpContext)
     {
         var username = GetUsername(httpContext);
-        User? currentUser = await DbContext.Users.Where(user => user.Username == username).FirstOrDefaultAsync();
+        using var dbContext = _dbContextFactory.CreateDbContext();
+        User? currentUser = await dbContext.Users.Where(user => user.Username == username).FirstOrDefaultAsync();
         return currentUser;
     }
 }

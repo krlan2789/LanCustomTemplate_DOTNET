@@ -14,7 +14,7 @@ public class AuthMiddleware
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context, TokenService tokenService)
+    public async Task InvokeAsync(HttpContext context, JwtTokenService tokenService)
     {
         var endpoint = context.GetEndpoint();
         if (endpoint != null)

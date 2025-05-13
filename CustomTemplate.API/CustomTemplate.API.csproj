@@ -26,7 +26,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Configurations\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Data\" />
+    <Folder Include="Dtos\" />
+    <Folder Include="Entities\" />
     <Folder Include="Helper\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="Middlewares\" />
+    <Folder Include="Seeders\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

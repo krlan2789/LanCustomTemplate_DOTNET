@@ -15,9 +15,9 @@ namespace CustomTemplate.API.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly LanDatabaseContext dbContext;
-        private readonly TokenService _tokenService;
+        private readonly JwtTokenService _tokenService;
 
-        public UserController(ILogger<UserController> logger, TokenService tokenService, LanDatabaseContext context)
+        public UserController(ILogger<UserController> logger, JwtTokenService tokenService, LanDatabaseContext context)
         {
             _logger = logger;
             dbContext = context;
