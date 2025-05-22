@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "LAN Technology",
+    "classifications": [
+        "Web",
+        "API",
+        "Web API",
+        "ASP.NET Core",
+        "C#",
+        "Clean Architecture"
+    ],
+    "identity": "LAN_CustomTemplate_CA_API",
+    "name": ".LAN - ASP.NET Core Web API (Clean Architecture)",
+    "description": "A template for creating a new ASP.NET Core Web API project following Clean Architecture principles.",
+    "shortName": "lanwebapi-ca",
+    "sourceName": "CustomTemplate_CA_API",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "preferNameDirectory": true
+}

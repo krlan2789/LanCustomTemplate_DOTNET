@@ -1,8 +1,0 @@
-@CustomTemplate_API_HostAddress = http://localhost:5039
-@CustomTemplate_API_Username = tester123
-
-### Get User Profile
-GET {{CustomTemplate_API_HostAddress}}/user/{{CustomTemplate_API_Username}}
-Accept: application/json
-
-###
