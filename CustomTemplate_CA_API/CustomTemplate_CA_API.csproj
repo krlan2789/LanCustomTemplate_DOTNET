@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>CustomTemplate_CA_API</RootNamespace>
+    <PackageId>LanessTechnology.API.CleanArchitecture.Templates</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
