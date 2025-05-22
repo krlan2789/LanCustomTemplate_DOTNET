@@ -1,4 +1,4 @@
-# LanCustomTemplate-DOTNET
+# LanCustomTemplate_DOTNET
 
 .NET Project - Custom Template when creating new .NET Core project
 
