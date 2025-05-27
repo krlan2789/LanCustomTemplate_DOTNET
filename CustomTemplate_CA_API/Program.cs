@@ -36,7 +36,6 @@ public class Program
                 //options.UseNpgsql("" + builder.Configuration.GetConnectionString("PostgreSqlConnection"));
             }, 256);
 
-
         // Add services to the container
         builder.Services
             .AddAuthentication(options =>
