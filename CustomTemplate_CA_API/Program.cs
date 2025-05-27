@@ -1,8 +1,12 @@
-using CustomTemplate_CA_API.Application.Configurations;
-using CustomTemplate_CA_API.Application.Interfaces.Repositories;
-using CustomTemplate_CA_API.Application.Interfaces.Services;
-using CustomTemplate_CA_API.Application.Services;
+using CustomTemplate_CA_API.Application.CredentialDomain.Configurations;
+using CustomTemplate_CA_API.Application.CredentialDomain.Interfaces;
+using CustomTemplate_CA_API.Application.CredentialDomain.Services;
+using CustomTemplate_CA_API.Application.SessionLogDomain.Interfaces;
+using CustomTemplate_CA_API.Application.UserDomain.Interfaces;
+using CustomTemplate_CA_API.Application.UserDomain.Services;
+using CustomTemplate_CA_API.Core.Repositories;
 using CustomTemplate_CA_API.Infrastructure.Persistence;
+using CustomTemplate_CA_API.Infrastructure.Persistence.Repositories;
 using CustomTemplate_CA_API.Infrastructure.Seeders;
 using CustomTemplate_CA_API.Presentation.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,10 +28,14 @@ public class Program
 
         // Add Database Context services to the container
         builder.Services
-            .AddDbContext<AppDatabaseContext>(option =>
+            .AddDbContextPool<AppDatabaseContext>(options =>
             {
-                option.UseSqlServer("" + builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+                // Uncomment the database provider you want to use and remove the others
+                options.UseSqlite("" + builder.Configuration.GetConnectionString("SqliteConnection"));
+                //options.UseSqlServer("" + builder.Configuration.GetConnectionString("SqlServerConnection"));
+                //options.UseNpgsql("" + builder.Configuration.GetConnectionString("PostgreSqlConnection"));
+            }, 256);
+
 
         // Add services to the container
         builder.Services
@@ -50,10 +58,21 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("" + jwtSettings?.SecretKey))
                 };
             });
-        builder.Services.AddScoped<ITokenService, JwtTokenService>();
-        builder.Services.AddScoped<IAuthService, AuthService>();
-        builder.Services.AddScoped<IUserService, UserService>();
+
+        // Add session services to the container
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
+
+        builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         builder.Services.AddScoped<IUserRepository, IUserRepository>();
+        builder.Services.AddScoped<ISessionLogRepository, SessionLogRepository>();
+        builder.Services.AddScoped<ITokenService, JwtTokenService>();
+        builder.Services.AddScoped<ICredentialService, CredentialService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
@@ -73,7 +92,7 @@ public class Program
                     .WithTheme(ScalarTheme.BluePlanet)
                     .WithEndpointPrefix(scalarApiRoute)
                     .WithOpenApiRoutePattern(openApiRoute)
-                    .WithTitle((builder.Configuration["AppName"] ?? "CustomTemplate_CA_API") + " - REST API");
+                    .WithTitle((builder.Configuration["AppName"] ?? "CustomTemplate_CA_API") + " - WEB API");
             });
 
             using var scope = app.Services.CreateScope();
@@ -87,10 +106,11 @@ public class Program
         app.UseStaticFiles();
         app.UseCookiePolicy();
         app.UseRouting();
+        app.UseSession();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseMiddleware<SessionLoggingMiddleware>();
         app.UseMiddleware<AuthMiddleware>();
-        app.UseMiddleware<UserSessionLoggingMiddleware>();
         app.MapControllers();
 
         app.Run();

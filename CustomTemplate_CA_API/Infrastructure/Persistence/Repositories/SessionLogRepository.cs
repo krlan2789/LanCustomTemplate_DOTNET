@@ -1,0 +1,17 @@
+﻿using CustomTemplate_CA_API.Application.SessionLogDomain.Interfaces;
+using CustomTemplate_CA_API.Core.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace CustomTemplate_CA_API.Infrastructure.Persistence.Repositories
+{
+    public class SessionLogRepository(IDbContextFactory<AppDatabaseContext> dbContextFactory) : BaseRepository<SessionLogEntity>(dbContextFactory), ISessionLogRepository
+    {
+        public async Task<IEnumerable<SessionLogEntity>?> FindManyByUsernameAsync(string username)
+        {
+            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+            return await dbContext.UserSessionLogs
+                .Where(e => e.User != null && e.User.Username == username)
+                .ToListAsync();
+        }
+    }
+}

@@ -1,5 +1,8 @@
-using CustomTemplate_CA_API.Application.Dtos;
-using CustomTemplate_CA_API.Application.Interfaces.Services;
+using CustomTemplate_CA_API.Application.Common.Dtos;
+using CustomTemplate_CA_API.Application.CredentialDomain.Interfaces;
+using CustomTemplate_CA_API.Application.UserDomain.Commands;
+using CustomTemplate_CA_API.Application.UserDomain.Dtos;
+using CustomTemplate_CA_API.Application.UserDomain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +28,7 @@ namespace CustomTemplate_CA_API.Presentation.Controllers
             try
             {
                 var username = "" + _tokenService.GetUsername(HttpContext);
-                var currentUser = await _userService.GetProfile(username);
+                var currentUser = await _userService.GetProfile(new(username));
                 if (currentUser != null)
                 {
                     return Results.Ok(new ResponseData<UserProfileDto>("Success", currentUser));
@@ -53,7 +56,7 @@ namespace CustomTemplate_CA_API.Presentation.Controllers
         {
             try
             {
-                var currentUser = await _userService.GetProfile(Username);
+                var currentUser = await _userService.GetProfile(new(Username));
                 if (currentUser != null)
                 {
                     return Results.Ok(new ResponseData<UserProfileDto>("Success", currentUser));
@@ -78,12 +81,12 @@ namespace CustomTemplate_CA_API.Presentation.Controllers
         [ProducesResponseType<ResponseData<UserProfileDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ResponseError<object>>(StatusCodes.Status401Unauthorized)]
-        public async Task<IResult> UpdateProfile([FromBody] UpdateUserProfileDto dto)
+        public async Task<IResult> UpdateProfile([FromBody] UpdateUserProfileCommand cmd)
         {
             try
             {
                 var username = "" + _tokenService.GetUsername(HttpContext);
-                var currentUser = await _userService.UpdateProfile(username, dto);
+                var currentUser = await _userService.UpdateProfile(cmd);
                 if (currentUser != null)
                 {
                     return Results.Ok(new ResponseData<UserProfileDto>("Success", currentUser));

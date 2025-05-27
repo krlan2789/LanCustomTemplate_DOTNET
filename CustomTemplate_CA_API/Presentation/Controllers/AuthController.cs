@@ -1,5 +1,7 @@
-using CustomTemplate_CA_API.Application.Dtos;
-using CustomTemplate_CA_API.Application.Interfaces.Services;
+using CustomTemplate_CA_API.Application.Common.Dtos;
+using CustomTemplate_CA_API.Application.CredentialDomain.Interfaces;
+using CustomTemplate_CA_API.Application.UserDomain.Commands;
+using CustomTemplate_CA_API.Application.UserDomain.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +9,11 @@ namespace CustomTemplate_CA_API.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(ILogger<AuthController> logger, ITokenService tokenService, IAuthService authService) : ControllerBase
+    public class AuthController(ILogger<AuthController> logger, ITokenService tokenService, ICredentialService authService) : ControllerBase
     {
         private readonly ILogger<AuthController> _logger = logger;
         private readonly ITokenService _tokenService = tokenService;
-        private readonly IAuthService _authService = authService;
+        private readonly ICredentialService _authService = authService;
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -20,7 +22,7 @@ namespace CustomTemplate_CA_API.Presentation.Controllers
         [ProducesResponseType<ResponseData<UserDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ResponseError<object>>(StatusCodes.Status404NotFound)]
-        public async Task<IResult> PostLogin(LoginUserDto dto)
+        public async Task<IResult> PostLogin(LoginUserCommand dto)
         {
             try
             {
@@ -50,7 +52,7 @@ namespace CustomTemplate_CA_API.Presentation.Controllers
         [EndpointDescription("Create new account to use authorized endpoints.")]
         [ProducesResponseType<ResponseData<UserDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ResponseError<object>>(StatusCodes.Status400BadRequest)]
-        public async Task<IResult> PostRegister([FromBody] RegisterUserDto dto)
+        public async Task<IResult> PostRegister([FromBody] RegisterUserCommand dto)
         {
             try
             {

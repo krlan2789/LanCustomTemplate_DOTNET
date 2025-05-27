@@ -1,4 +1,4 @@
-using CustomTemplate_CA_API.Application.Services;
+using CustomTemplate_CA_API.Application.CredentialDomain.Services;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CustomTemplate_CA_API.Presentation.Middlewares;

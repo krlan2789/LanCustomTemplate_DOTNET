@@ -8,7 +8,7 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
 {
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<UserProfileEntity> UserProfiles => Set<UserProfileEntity>();
-    public DbSet<UserSessionLogEntity> UserSessionLogs => Set<UserSessionLogEntity>();
+    public DbSet<SessionLogEntity> UserSessionLogs => Set<SessionLogEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,8 +18,6 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
             entity.HasIndex(e => e.Email).IsUnique();
             entity.HasIndex(e => e.Username).IsUnique();
             entity.HasOne(e => e.Profile).WithOne(r => r.User).HasForeignKey<UserProfileEntity>(r => r.UserId);
-            // entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
-            // entity.Property(e => e.UpdatedAt).HasDefaultValueSql("GETDATE()");
         });
 
         // UserProfiles Table
@@ -30,7 +28,7 @@ public class AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : 
         });
 
         // UserSessionLog Table
-        modelBuilder.Entity<UserSessionLogEntity>(entity =>
+        modelBuilder.Entity<SessionLogEntity>(entity =>
         {
             entity.HasOne(e => e.User).WithMany().HasForeignKey(r => r.UserId).OnDelete(DeleteBehavior.Restrict);
         });

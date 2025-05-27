@@ -3,8 +3,8 @@
     "author": "Laness Technology",
     "classifications": [
         "Web",
-        "API",
         "Web API",
+        "ASP.NET",
         "ASP.NET Core",
         "C#",
         "Clean Architecture"
@@ -18,52 +18,5 @@
         "language": "C#",
         "type": "project"
     },
-    "symbols": {
-        "DatabaseType": {
-            "type": "parameter",
-            "datatype": "choice",
-            "defaultValue": "DATABASETYPESQLITE",
-            "replaces": "$(DatabaseType)",
-            "choices": [
-                {
-                    "choice": "DATABASETYPESQLITE",
-                    "displayName": "SQLite"
-                },
-                {
-                    "choice": "DATABASETYPESQLSERVER",
-                    "displayName": "SQL Server"
-                },
-                {
-                    "choice": "DATABASETYPEPOSTGRESQL",
-                    "displayName": "PostgreSQL"
-                }
-            ],
-            "description": "Choose the database type"
-        }
-    },
-    "sources": [
-        {
-            "modifiers": [
-                {
-                    "condition": "DatabaseType != 'DATABASETYPESQLITE'",
-                    "exclude": [
-                        "Program.cs:sqliteConfig"
-                    ]
-                },
-                {
-                    "condition": "DatabaseType != 'DATABASETYPESQLSERVER'",
-                    "exclude": [
-                        "Program.cs:sqlserverConfig"
-                    ]
-                },
-                {
-                    "condition": "DatabaseType != 'DATABASETYPEPOSTGRESQL'",
-                    "exclude": [
-                        "Program.cs:postgresqlConfig"
-                    ]
-                }
-            ]
-        }
-    ],
     "preferNameDirectory": true
 }
