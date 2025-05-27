@@ -1,6 +1,22 @@
 # LanCustomTemplate_DOTNET
 
-.NET Project - Custom Template when creating new .NET Core project
+ASP.NET Project - Custom Template when creating new ASP.NET Core project
+
+## About The Template
+
+This template demonstrates a practical application of Clean Architecture, Domain-Driven Design (DDD), and Command Query Responsibility Segregation (CQRS) patterns in a ASP.NET Core project. It provides a solid foundation for building maintainable, and testable applications by organizing code into clear layers and separating concerns.
+
+- Follows Clean Architecture principles
+- Follows Domain-Driven Design principles
+- Follows Command Query Responsibility Segregation principles
+- Custom Command/Query-DTO Mapping
+- Middleware for Logging
+- Tokenization Service (JWT)
+- Hashing Helper
+- Slug Helper
+- Database Context Config (SQLite/SQL Server/PostgreSQL)
+- Data Seeder in Development Environment
+- Setup OpenAPI Documentation with Scalar
 
 ## How to use
 
@@ -50,135 +66,3 @@
     ```shell
     $ dotnet new laness-webapi -o MyNewProject
     ```
-
-## Templates
-
-Directory structure of `LanCustomTemplate_DOTNET/CustomTemplate_CA_API/`:
-
-```shell
-~/DOTNET/PROJECTS/LanCustomTemplate_DOTNET/CustomTemplate_CA_API/
-    │   CustomTemplate.sln
-    │
-    └───CustomTemplate_CA_API
-        │   appsettings.Development.json
-        │   appsettings.json
-        │   CustomTemplate_CA_API.csproj
-        │   CustomTemplate_CA_API.csproj.user
-        │   CustomTemplate_CA_API.http
-        │   Program.cs
-        │
-        ├───Application
-        │   ├───Common
-        │   │   └───Dtos
-        │   │           ResponseData.cs
-        │   │           ResponseDataArray.cs
-        │   │           ResponseError.cs
-        │   │           ResponseErrorArray.cs
-        │   │
-        │   ├───CredentialDomain
-        │   │   ├───Configurations
-        │   │   │       JwtTokenSettings.cs
-        │   │   │       
-        │   │   ├───Interfaces
-        │   │   │       ICredentialService.cs
-        │   │   │       ITokenService.cs
-        │   │   │       
-        │   │   └───Services
-        │   │           CredentialService.cs
-        │   │           JwtTokenService.cs
-        │   │
-        │   ├───SessionLogDomain
-        │   │   ├───Commands
-        │   │   │       CreateSessionLogCommand.cs
-        │   │   │       
-        │   │   ├───Dtos
-        │   │   │       SessionLogDto.cs
-        │   │   │       
-        │   │   ├───Interfaces
-        │   │   │       ISessionLogRepository.cs
-        │   │   │       ISessionLogService.cs
-        │   │   │       
-        │   │   ├───Mapping
-        │   │   │       SessionLogMapping.cs
-        │   │   │
-        │   │   ├───Queries
-        │   │   │       SessionLogsByUsernameQuery.cs
-        │   │   │
-        │   │   └───Services
-        │   │           SessionLogService.cs
-        │   │
-        │   └───UserDomain
-        │       ├───Commands
-        │       │       LoginUserCommand.cs
-        │       │       RegisterUserCommand.cs
-        │       │       UpdateUserProfileCommand.cs
-        │       │
-        │       ├───Dtos
-        │       │       UserDto.cs
-        │       │       UserProfileDto.cs
-        │       │
-        │       ├───Interfaces
-        │       │       IUserRepository.cs
-        │       │       IUserService.cs
-        │       │
-        │       ├───Mapping
-        │       │       UserMapping.cs
-        │       │       UserProfileMapping.cs
-        │       │
-        │       ├───Queries
-        │       │       UserProfileByUsernameQuery.cs
-        │       │
-        │       └───Services
-        │               UserService.cs
-        │
-        ├───Core
-        │   ├───Entities
-        │   │       SessionLogEntity.cs
-        │   │       UserEntity.cs
-        │   │       UserProfileEntity.cs
-        │   │
-        │   ├───Helper
-        │   │       HashingHelper.cs
-        │   │       SlugHelper.cs
-        │   │
-        │   └───Repositories
-        │           IBaseRepository.cs
-        │
-        ├───Infrastructure
-        │   ├───Persistence
-        │   │   │   AppDatabaseContext.cs
-        │   │   │
-        │   │   └───Repositories
-        │   │           BaseRepository.cs
-        │   │           SessionLogRepository.cs
-        │   │           UserRepository.cs
-        │   │
-        │   └───Seeders
-        │           DatabaseSeeder.cs
-        │           UserProfileSeeder.cs
-        │           UserSeeder.cs
-        │
-        ├───Presentation
-        │   ├───Controllers
-        │   │       AuthController.cs
-        │   │       UserController.cs
-        │   │
-        │   └───Middlewares
-        │           AuthMiddleware.cs
-        │           SessionLoggingMiddleware.cs
-        │
-        └───Properties
-                launchSettings.json
-
-```
-
-## Available Examples
-
-- Follows Clean Architecture principles
-- Custom Entity-DTO Mapping
-- Simple Middleware for Logging
-- Tokenization Service (JWT)
-- Hashing Helper
-- Slug Helper
-- Data Seeder in Development Environment
-- Setup OpenAPI Documentation with Scalar
