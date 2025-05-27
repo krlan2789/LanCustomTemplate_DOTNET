@@ -9,14 +9,61 @@
         "C#",
         "Clean Architecture"
     ],
-    "identity": "LanessTechnology.API.CleanArchitecture.Templates",
-    "name": "ASP.NET Core Web API (Clean Architecture)",
-    "description": "A template for creating a new ASP.NET Core Web API project following Clean Architecture principles.",
-    "shortName": "laness-webapi-ca",
+    "identity": "LanessTechnology.API.Templates",
+    "name": ".Laness - ASP.NET Core Web API",
+    "description": "A project template for creating ASP.NET Core Web APIs with a simplified implementation of Clean Architecture, SOLID, DDD, CQRS, and OOP (of course).",
+    "shortName": "laness-webapi",
     "sourceName": "CustomTemplate_CA_API",
     "tags": {
         "language": "C#",
         "type": "project"
     },
+    "symbols": {
+        "DatabaseType": {
+            "type": "parameter",
+            "datatype": "choice",
+            "defaultValue": "DATABASETYPESQLITE",
+            "replaces": "$(DatabaseType)",
+            "choices": [
+                {
+                    "choice": "DATABASETYPESQLITE",
+                    "displayName": "SQLite"
+                },
+                {
+                    "choice": "DATABASETYPESQLSERVER",
+                    "displayName": "SQL Server"
+                },
+                {
+                    "choice": "DATABASETYPEPOSTGRESQL",
+                    "displayName": "PostgreSQL"
+                }
+            ],
+            "description": "Choose the database type"
+        }
+    },
+    "sources": [
+        {
+            "modifiers": [
+                {
+                    "condition": "DatabaseType != 'DATABASETYPESQLITE'",
+                    "exclude": [
+                        "Program.cs:sqliteConfig"
+                    ]
+                },
+                {
+                    "condition": "DatabaseType != 'DATABASETYPESQLSERVER'",
+                    "exclude": [
+                        "Program.cs:sqlserverConfig"
+                    ]
+                },
+                {
+                    "condition": "DatabaseType != 'DATABASETYPEPOSTGRESQL'",
+                    "exclude": [
+                        "Program.cs:postgresqlConfig"
+                    ]
+                }
+            ]
+        }
+    ],
     "preferNameDirectory": true
 }
