@@ -4,30 +4,27 @@ using System.Linq.Expressions;
 
 namespace CustomTemplate_CA_API.Infrastructure.Persistence.Repositories;
 
-public abstract class BaseRepository<E>(IDbContextFactory<AppDatabaseContext> dbContextFactory)
-    : IBaseRepository<E> where E : class
+public abstract class BaseRepository(AppDatabaseContext dbContext)
+    : IBaseRepository
 {
-    protected readonly IDbContextFactory<AppDatabaseContext> _dbContextFactory = dbContextFactory;
-    protected DbSet<E> GetDbSet(AppDatabaseContext context) => context.Set<E>();
+    protected readonly AppDatabaseContext _dbContext = dbContext;
+    protected DbSet<TEntity> GetDbSet<TEntity>(AppDatabaseContext context) where TEntity : class => context.Set<TEntity>();
 
-    public async virtual Task<IEnumerable<E>?> GetAllAsync()
+    public async virtual Task<IEnumerable<TEntity>?> GetAllAsync<TEntity>() where TEntity : class
     {
-        await using var context = _dbContextFactory.CreateDbContext();
-        return await context.Set<E>().ToListAsync();
+        return await _dbContext.Set<TEntity>().ToListAsync();
     }
 
-    public async virtual Task<E?> FindByIdAsync(Guid id)
+    public async virtual Task<TEntity?> FindByIdAsync<TEntity>(Guid id) where TEntity : class
     {
-        await using var context = _dbContextFactory.CreateDbContext();
-        return await context.Set<E>().FindAsync(id);
+        return await _dbContext.Set<TEntity>().FindAsync(id);
     }
 
-    public async virtual Task<E?> FindByFiltersAsync(Dictionary<string, object> filters)
+    public async virtual Task<TEntity?> FindByFiltersAsync<TEntity>(Dictionary<string, object> filters) where TEntity : class
     {
-        await using var context = _dbContextFactory.CreateDbContext();
-        IQueryable<E> query = context.Set<E>();
+        IQueryable<TEntity> query = _dbContext.Set<TEntity>();
 
-        var parameter = Expression.Parameter(typeof(E), "e");
+        var parameter = Expression.Parameter(typeof(TEntity), "e");
         Expression finalExpression = Expression.Constant(true);
 
         foreach (var filter in filters)
@@ -38,32 +35,29 @@ public abstract class BaseRepository<E>(IDbContextFactory<AppDatabaseContext> db
             finalExpression = Expression.AndAlso(finalExpression, equals);
         }
 
-        var lambda = Expression.Lambda<Func<E, bool>>(finalExpression, parameter);
+        var lambda = Expression.Lambda<Func<TEntity, bool>>(finalExpression, parameter);
         return await query.Where(lambda).FirstOrDefaultAsync();
     }
 
-    public async virtual Task AddAsync(E entity)
+    public async virtual Task AddAsync<TEntity>(TEntity entity) where TEntity : class
     {
-        await using var context = _dbContextFactory.CreateDbContext();
-        context.Set<E>().Add(entity);
-        await context.SaveChangesAsync();
+        _dbContext.Set<TEntity>().Add(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async virtual Task UpdateAsync(E entity)
+    public async virtual Task UpdateAsync<TEntity>(TEntity entity) where TEntity : class
     {
-        await using var context = _dbContextFactory.CreateDbContext();
-        context.Set<E>().Update(entity);
-        await context.SaveChangesAsync();
+        _dbContext.Set<TEntity>().Update(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async virtual Task DeleteByIdAsync(Guid id)
+    public async virtual Task DeleteByIdAsync<TEntity>(Guid id) where TEntity : class
     {
-        await using var context = _dbContextFactory.CreateDbContext();
-        var entity = await context
-            .Set<E>()
+        var entity = await _dbContext
+            .Set<TEntity>()
             .FindAsync(id)
-            ?? throw new KeyNotFoundException($"Entity of type {typeof(E).Name} with ID {id} not found.");
-        context.Set<E>().Remove(entity);
-        await context.SaveChangesAsync();
+            ?? throw new KeyNotFoundException($"Entity of type {typeof(TEntity).Name} with ID {id} not found.");
+        _dbContext.Set<TEntity>().Remove(entity);
+        await _dbContext.SaveChangesAsync();
     }
 }

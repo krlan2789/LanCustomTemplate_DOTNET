@@ -4,7 +4,6 @@ using CustomTemplate_CA_API.Application.CredentialDomain.Services;
 using CustomTemplate_CA_API.Application.SessionLogDomain.Interfaces;
 using CustomTemplate_CA_API.Application.UserDomain.Interfaces;
 using CustomTemplate_CA_API.Application.UserDomain.Services;
-using CustomTemplate_CA_API.Core.Repositories;
 using CustomTemplate_CA_API.Infrastructure.Persistence;
 using CustomTemplate_CA_API.Infrastructure.Persistence.Repositories;
 using CustomTemplate_CA_API.Infrastructure.Seeders;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
-using System;
 using System.Text;
 
 namespace CustomTemplate_CA_API;
@@ -58,6 +56,7 @@ public class Program
             });
 
         // Add session services to the container
+        builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
             options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
@@ -65,8 +64,7 @@ public class Program
             options.Cookie.IsEssential = true;
         });
 
-        builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-        builder.Services.AddScoped<IUserRepository, IUserRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ISessionLogRepository, SessionLogRepository>();
         builder.Services.AddScoped<ITokenService, JwtTokenService>();
         builder.Services.AddScoped<ICredentialService, CredentialService>();

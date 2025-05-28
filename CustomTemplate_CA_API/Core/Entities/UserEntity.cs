@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CustomTemplate_CA_API.Core.Entities;
 
-[Table("Users"), Index(nameof(Email), IsUnique = true)]
+[Table("Users"), Index(nameof(Email), IsUnique = true), Index(nameof(Username), IsUnique = true)]
 public class UserEntity
 {
     [Key]

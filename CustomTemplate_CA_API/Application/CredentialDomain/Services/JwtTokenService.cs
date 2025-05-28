@@ -11,10 +11,10 @@ using System.Text;
 
 namespace CustomTemplate_CA_API.Application.CredentialDomain.Services;
 
-public sealed class JwtTokenService(IOptions<JwtTokenSettings> options, ILogger<JwtTokenService> logger, IUserRepository userRepository) : ITokenService
+public sealed class JwtTokenService(IOptions<JwtTokenSettings> options, ILogger<ITokenService> logger, IUserRepository userRepository) : ITokenService
 {
     private readonly JwtTokenSettings _options = options.Value;
-    private readonly ILogger<JwtTokenService> _logger = logger;
+    private readonly ILogger<ITokenService> _logger = logger;
     private readonly IUserRepository _userRepository = userRepository;
 
     public string GenerateToken(string username, TimeSpan expiration)

@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CustomTemplate_CA_API.Infrastructure.Persistence.Repositories;
 
-public class UserRepository(IDbContextFactory<AppDatabaseContext> dbContextFactory)
-    : BaseRepository<UserEntity>(dbContextFactory), IUserRepository
+public class UserRepository(AppDatabaseContext dbContext)
+    : BaseRepository(dbContext), IUserRepository
 {
     public async Task<UserEntity?> FindByUsernameAsync(string username)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        return await dbContext.Users
+        return await _dbContext.Users
             .AsNoTracking()
             .Where(u => u.Username == username)
             .Select(u => u)
@@ -20,8 +19,7 @@ public class UserRepository(IDbContextFactory<AppDatabaseContext> dbContextFacto
 
     public async Task<UserEntity?> FindSecureAsync(string username, string password)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        return await dbContext.Users
+        return await _dbContext.Users
             .Where(u => u.Username == username && password.VerifyHashed(u.PasswordHash))
             .Select(u => u)
             .FirstOrDefaultAsync();
@@ -29,8 +27,7 @@ public class UserRepository(IDbContextFactory<AppDatabaseContext> dbContextFacto
 
     public async Task<UserEntity?> FindByEmailAsync(string email)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        return await dbContext.Users
+        return await _dbContext.Users
             .AsNoTracking()
             .Where(u => u.Email == email)
             .Select(u => u)
@@ -39,16 +36,14 @@ public class UserRepository(IDbContextFactory<AppDatabaseContext> dbContextFacto
 
     public async Task<bool> ExistsByUsernameAsync(string username)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        return await dbContext
+        return await _dbContext
             .Users.Where(u => u.Username == username)
             .AnyAsync();
     }
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        return await dbContext.Users
+        return await _dbContext.Users
             .AsNoTracking()
             .Where(u => u.Email == email)
             .AnyAsync();
@@ -56,8 +51,7 @@ public class UserRepository(IDbContextFactory<AppDatabaseContext> dbContextFacto
 
     public Task<UserProfileEntity?> GetProfileAsync(string username)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        return dbContext.UserProfiles
+        return _dbContext.UserProfiles
             .AsNoTracking()
             .Include(u => u.User)
             .Where(u => u.User!.Username == username)
@@ -67,35 +61,32 @@ public class UserRepository(IDbContextFactory<AppDatabaseContext> dbContextFacto
 
     public async Task UpdateProfileAsync(string username, UserProfileEntity profileEntity)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        var user = await dbContext.Users
+        var user = await _dbContext.Users
             .Where(u => u.Username == username)
             .FirstOrDefaultAsync()
             ?? throw new InvalidOperationException("User not found");
         user.Profile = profileEntity;
-        dbContext.Users.Update(user);
-        dbContext.UserProfiles.Update(profileEntity);
-        await dbContext.SaveChangesAsync();
+        _dbContext.Users.Update(user);
+        _dbContext.UserProfiles.Update(profileEntity);
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteByUsernameAsync(string username)
     {
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        var user = await dbContext.Users
+        var user = await _dbContext.Users
             .Include(u => u.Profile)
             .FirstOrDefaultAsync(u => u.Username == username)
             ?? throw new InvalidOperationException("User not found");
-        dbContext.Users.Remove(user);
-        dbContext.UserProfiles.Remove(user.Profile!);
-        await dbContext.SaveChangesAsync();
+        _dbContext.Users.Remove(user);
+        _dbContext.UserProfiles.Remove(user.Profile!);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async override Task AddAsync(UserEntity entity)
+    public async Task AddAsync(UserEntity entity)
     {
         if (await ExistsByEmailAsync(entity.Email)) throw new InvalidOperationException("Email already registered");
         if (await ExistsByUsernameAsync(entity.Username)) throw new InvalidOperationException("Username already registered");
-        using var dbContext = _dbContextFactory.CreateDbContext();
-        dbContext.Users.Add(entity);
-        await dbContext.SaveChangesAsync();
+        _dbContext.Users.Add(entity);
+        await _dbContext.SaveChangesAsync();
     }
 }

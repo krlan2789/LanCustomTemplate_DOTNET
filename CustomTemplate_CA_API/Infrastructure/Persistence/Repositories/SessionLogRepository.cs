@@ -4,12 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CustomTemplate_CA_API.Infrastructure.Persistence.Repositories
 {
-    public class SessionLogRepository(IDbContextFactory<AppDatabaseContext> dbContextFactory) : BaseRepository<SessionLogEntity>(dbContextFactory), ISessionLogRepository
+    public class SessionLogRepository(AppDatabaseContext dbContext) : BaseRepository(dbContext), ISessionLogRepository
     {
         public async Task<IEnumerable<SessionLogEntity>?> FindManyByUsernameAsync(string username)
         {
-            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-            return await dbContext.UserSessionLogs
+            return await _dbContext.UserSessionLogs
                 .Where(e => e.User != null && e.User.Username == username)
                 .ToListAsync();
         }

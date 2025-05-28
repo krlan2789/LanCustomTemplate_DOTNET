@@ -1,11 +1,11 @@
 ﻿namespace CustomTemplate_CA_API.Core.Repositories;
 
-public interface IBaseRepository<E> where E : class
+public interface IBaseRepository
 {
-    public Task<IEnumerable<E>?> GetAllAsync();
-    public Task<E?> FindByIdAsync(Guid id);
-    public Task<E?> FindByFiltersAsync(Dictionary<string, object> filters);
-    public Task AddAsync(E entity);
-    public Task UpdateAsync(E entity);
-    public Task DeleteByIdAsync(Guid id);
+    public Task<IEnumerable<TEntity>?> GetAllAsync<TEntity>() where TEntity : class;
+    public Task<TEntity?> FindByIdAsync<TEntity>(Guid id) where TEntity : class;
+    public Task<TEntity?> FindByFiltersAsync<TEntity>(Dictionary<string, object> filters) where TEntity : class;
+    public Task AddAsync<TEntity>(TEntity entity) where TEntity : class;
+    public Task UpdateAsync<TEntity>(TEntity entity) where TEntity : class;
+    public Task DeleteByIdAsync<TEntity>(Guid id) where TEntity : class;
 }

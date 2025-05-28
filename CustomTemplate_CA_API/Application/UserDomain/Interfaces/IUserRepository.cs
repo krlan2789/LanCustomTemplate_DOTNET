@@ -3,7 +3,7 @@ using CustomTemplate_CA_API.Core.Repositories;
 
 namespace CustomTemplate_CA_API.Application.UserDomain.Interfaces;
 
-public interface IUserRepository : IBaseRepository<UserEntity>
+public interface IUserRepository : IBaseRepository
 {
     public Task<UserEntity?> FindByUsernameAsync(string username);
     public Task<UserEntity?> FindSecureAsync(string username, string password);
