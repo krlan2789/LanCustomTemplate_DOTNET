@@ -95,15 +95,15 @@
                 "cases": [
                     {
                         "condition": "(DatabaseType == 'sqlite')",
-                        "value": "Data Source=$(sourceName).db"
+                        "value": "Data Source=DATABASE_NAME.db"
                     },
                     {
                         "condition": "(DatabaseType == 'sqlserver')",
-                        "value": "Server=localhost\\SQLEXPRESS01;Database=$(sourceName);Trusted_Connection=True;TrustServerCertificate=True"
+                        "value": "Server=localhost\\SQLEXPRESS01;Database=DATABASE_NAME;Trusted_Connection=True;TrustServerCertificate=True"
                     },
                     {
                         "condition": "(DatabaseType == 'postgresql')",
-                        "value": "Host=localhost;Port=5432;Database=$(sourceName);Username=YOUR_USERNAME;Password=YOUR_PASSWORD;"
+                        "value": "Host=localhost;Port=5432;Database=DATABASE_NAME;Username=YOUR_USERNAME;Password=YOUR_PASSWORD;"
                     }
                 ]
             }
