@@ -11,12 +11,102 @@
     ],
     "identity": "LanessTechnology.API.Templates",
     "name": ".Laness - ASP.NET Core Web API",
-    "description": "A project template for creating ASP.NET Core Web APIs with a simplified implementation of Clean Architecture, SOLID, DDD, CQRS, and OOP (of course).",
+    "description": "A project template for creating ASP.NET Core Web APIs with a simplified implementation of Clean Architecture, SOLID, DDD, CQRS.",
     "shortName": "laness-webapi",
     "sourceName": "CustomTemplate_CA_API",
+    "preferNameDirectory": true,
     "tags": {
         "language": "C#",
         "type": "project"
     },
-    "preferNameDirectory": true
+    "symbols": {
+        "DatabaseType": {
+            "displayName": "Database Type",
+            "type": "parameter",
+            "datatype": "choice",
+            "defaultValue": "sqlite",
+            "replaces": "$(DatabaseType)",
+            "choices": [
+                {
+                    "choice": "sqlite",
+                    "displayName": "SQLite"
+                },
+                {
+                    "choice": "sqlserver",
+                    "displayName": "SQL Server"
+                },
+                {
+                    "choice": "postgresql",
+                    "displayName": "PostgreSQL"
+                }
+            ],
+            "description": "Choose the database type"
+        },
+        "DbContextOptionUse": {
+            "type": "generated",
+            "generator": "switch",
+            "replaces": "$(DbContextOptionUsePlaceholder)",
+            "parameters": {
+                "datatype": "string",
+                "cases": [
+                    {
+                        "condition": "(DatabaseType == 'sqlite')",
+                        "value": "UseSqlite"
+                    },
+                    {
+                        "condition": "(DatabaseType == 'sqlserver')",
+                        "value": "UseSqlServer"
+                    },
+                    {
+                        "condition": "(DatabaseType == 'postgresql')",
+                        "value": "UseNpgsql"
+                    }
+                ]
+            }
+        },
+        "DatabasePackageId": {
+            "type": "generated",
+            "generator": "switch",
+            "replaces": "$(DatabasePackageIdPlaceholder)",
+            "parameters": {
+                "datatype": "string",
+                "cases": [
+                    {
+                        "condition": "(DatabaseType == 'sqlite')",
+                        "value": "Microsoft.EntityFrameworkCore.Sqlite"
+                    },
+                    {
+                        "condition": "(DatabaseType == 'sqlserver')",
+                        "value": "Microsoft.EntityFrameworkCore.SqlServer"
+                    },
+                    {
+                        "condition": "(DatabaseType == 'postgresql')",
+                        "value": "Npgsql.EntityFrameworkCore.PostgreSQL"
+                    }
+                ]
+            }
+        },
+        "DatabaseConnectionStrings": {
+            "type": "generated",
+            "generator": "switch",
+            "replaces": "$(DatabaseConnectionStringsPlaceholder)",
+            "parameters": {
+                "datatype": "string",
+                "cases": [
+                    {
+                        "condition": "(DatabaseType == 'sqlite')",
+                        "value": "Data Source=CustomTemplate_CA_API.db"
+                    },
+                    {
+                        "condition": "(DatabaseType == 'sqlserver')",
+                        "value": "Server=localhost\\SQLEXPRESS01;Database=CustomTemplate_CA_API;Trusted_Connection=True;TrustServerCertificate=True"
+                    },
+                    {
+                        "condition": "(DatabaseType == 'postgresql')",
+                        "value": "Host=localhost;Port=5432;Database=CustomTemplate_CA_API;Username=YOUR_USERNAME;Password=YOUR_PASSWORD;"
+                    }
+                ]
+            }
+        }
+    }
 }

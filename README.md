@@ -4,7 +4,7 @@ ASP.NET Project - Custom Template when creating new ASP.NET Core project
 
 ## About The Template
 
-This template demonstrates a practical application of Clean Architecture, Domain-Driven Design (DDD), and Command Query Responsibility Segregation (CQRS) patterns in a ASP.NET Core project. It provides a solid foundation for building maintainable, and testable applications by organizing code into clear layers and separating concerns.
+This template demonstrates a practical application of Clean Architecture, Domain-Driven Design (DDD), and Command Query Responsibility Segregation (CQRS) patterns in a ASP.NET Core project. It provides a solid foundation for building maintainable and testable applications by organizing code into clear layers and separating concerns.
 
 - Follows Clean Architecture principles
 - Follows Domain-Driven Design principles

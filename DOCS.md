@@ -1,6 +1,6 @@
 # Documentation
 
-## Project Structure
+## Directory Structure
 
 Directory structure of `LanCustomTemplate_DOTNET/CustomTemplate_CA_API/`:
 
@@ -12,7 +12,6 @@ Directory structure of `LanCustomTemplate_DOTNET/CustomTemplate_CA_API/`:
         │   appsettings.Development.json
         │   appsettings.json
         │   CustomTemplate_CA_API.csproj
-        │   CustomTemplate_CA_API.csproj.user
         │   CustomTemplate_CA_API.http
         │   Program.cs
         │

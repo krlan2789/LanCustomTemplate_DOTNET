@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System;
 using System.Text;
 
 namespace CustomTemplate_CA_API;
@@ -31,9 +32,7 @@ public class Program
             .AddDbContextPool<AppDatabaseContext>(options =>
             {
                 // Uncomment the database provider you want to use and remove the others
-                options.UseSqlite("" + builder.Configuration.GetConnectionString("SqliteConnection"));
-                //options.UseSqlServer("" + builder.Configuration.GetConnectionString("SqlServerConnection"));
-                //options.UseNpgsql("" + builder.Configuration.GetConnectionString("PostgreSqlConnection"));
+                options.$(DbContextOptionUsePlaceholder)("" + builder.Configuration.GetConnectionString("DefaultConnection"));
             }, 256);
 
         // Add services to the container
