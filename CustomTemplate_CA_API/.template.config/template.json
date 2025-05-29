@@ -117,9 +117,13 @@
     },
     "sources": [
         {
-            "condition": "GuidanceMarkdown == true",
-            "include": [
-                "GUIDANCE.md"
+            "modifiers": [
+                {
+                    "condition": "GuidanceMarkdown == 'true'",
+                    "include": [
+                        "GUIDANCE.md"
+                    ]
+                }
             ]
         }
     ]
