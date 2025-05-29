@@ -42,6 +42,12 @@
             ],
             "description": "Choose the database type"
         },
+        "GuidanceMarkdown": {
+            "displayName": "Add Guidance",
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "true"
+        },
         "DbContextOptionUse": {
             "type": "generated",
             "generator": "switch",
@@ -108,5 +114,13 @@
                 ]
             }
         }
-    }
+    },
+    "sources": [
+        {
+            "condition": "GuidanceMarkdown == true",
+            "include": [
+                "GUIDANCE.md"
+            ]
+        }
+    ]
 }
