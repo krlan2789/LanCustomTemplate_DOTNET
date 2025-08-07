@@ -2,3 +2,6 @@
 
 # IDE0160: Convert to block scoped namespace
 csharp_style_namespace_declarations = block_scoped
+indent_size = 4
+indent_style = tab
+tab_width = 4

@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Laness Technology",
+    "classifications": [
+        "C#",
+        "Class Library",
+        "Clean Architecture"
+    ],
+    "identity": "LanessTechnology.Module.Templates",
+    "name": ".Laness - .NET Class Library (Module)",
+    "description": "A class library template for modular monolith .NET project with a simplified implementation of Clean Architecture, SOLID, DDD, CQRS.",
+    "shortName": "laness-mm-module",
+    "sourceName": "CustomTemplate_CA_",
+    "preferNameDirectory": true,
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    }
+}
