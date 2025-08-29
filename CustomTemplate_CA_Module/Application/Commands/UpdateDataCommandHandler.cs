@@ -1,10 +1,11 @@
+using Core.Abstractions;
 using CustomTemplate_CA_Module.Application.Abstractions;
 using CustomTemplate_CA_Module.Domain.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace CustomTemplate_CA_Module.Application.Commands;
 
-public class UpdateDataCommandHandler(ILogger<ICustomTemplate_CA_WriteRepository> _logger, ICustomTemplate_CA_ReadRepository _readRepository, ICustomTemplate_CA_WriteRepository _writeRepository)
+public class UpdateDataCommandHandler(ILogger<ICustomTemplate_CA_WriteRepository> _logger, ICustomTemplate_CA_ReadRepository _readRepository, ICustomTemplate_CA_WriteRepository _writeRepository) : ICommandHandler<UpdateDataCommand>
 {
     public async Task Handle(UpdateDataCommand command)
     {
@@ -14,7 +15,7 @@ public class UpdateDataCommandHandler(ILogger<ICustomTemplate_CA_WriteRepository
             _logger.LogWarning("Data with email {Email} not found", command.Email);
             throw new InvalidOperationException($"Data with email {command.Email} not found.");
         }
-            
+
         currentData
             .SetName(command.Name)
             .SetEmail(command.Email)

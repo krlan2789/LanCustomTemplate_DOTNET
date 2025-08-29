@@ -1,27 +1,21 @@
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomTemplate_CA_Module.Domain.Entities;
 
-[Table("Users"), Index(nameof(Email), IsUnique = true), Index(nameof(PhoneNumber), IsUnique = true)]
-public class CustomTemplate_CA_Entity
+[Table("CustomTemplate_CA_s"), Index(nameof(Email), IsUnique = true), Index(nameof(PhoneNumber), IsUnique = true)]
+public class CustomTemplate_CA_Entity : BaseSoftDeletableEntity
 {
-	[Key]
-	public string Id { get; set; } = Guid.NewGuid().ToString();
-
 	[Required, MaxLength(255)]
-    public required string Name { get; set; }
+	public required string Name { get; set; }
 
-    [Required, MaxLength(128)]
-    public required string Email { get; set; }
+	[Required, MaxLength(128)]
+	public required string Email { get; set; }
 
-    [Required, MaxLength(32)]
-    public required string PhoneNumber { get; set; }
-
-	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-	public DateTime? DeletedAt { get; set; }
+	[Required, MaxLength(32)]
+	public required string PhoneNumber { get; set; }
 
 	public CustomTemplate_CA_Entity SetName(string? name)
 	{

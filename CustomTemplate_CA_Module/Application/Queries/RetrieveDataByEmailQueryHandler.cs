@@ -1,3 +1,4 @@
+using Core.Abstractions;
 using CustomTemplate_CA_Module.Application.Abstractions;
 using CustomTemplate_CA_Module.Application.Dtos;
 using CustomTemplate_CA_Module.Application.Factories;
@@ -5,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CustomTemplate_CA_Module.Application.Queries;
 
-public class RetrieveDataByEmailQueryHandler(ILogger<ICustomTemplate_CA_ReadRepository> _logger, ICustomTemplate_CA_ReadRepository _repository)
+public class RetrieveDataByEmailQueryHandler(ILogger<ICustomTemplate_CA_ReadRepository> _logger, ICustomTemplate_CA_ReadRepository _repository) : IQueryHandler<RetrieveDataByEmailQuery, CustomTemplate_CA_Dto>
 {
     public async Task<CustomTemplate_CA_Dto> Handle(RetrieveDataByEmailQuery query)
     {
